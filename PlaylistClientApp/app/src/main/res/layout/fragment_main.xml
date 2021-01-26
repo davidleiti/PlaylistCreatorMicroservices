@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.MainFragment">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.ubb.david.playlistcreator.presentation.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logout_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/lbl_logout"
+            android:textAllCaps="true"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/welcome_label"
+            style="@style/Widget.MaterialComponents.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logout_button"
+            tools:text="Welcome, user" />
+
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.loading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/welcome_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/welcome_label"
+            app:layout_constraintTop_toTopOf="@id/welcome_label" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/new_playlist_button"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/lbl_create_playlist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/welcome_label" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tracks_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/new_playlist_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_goneMarginTop="16dp"
+            tools:listitem="@layout/track_item"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,1 @@
+cd PlaylistService && gradlew build && docker build -t playlist-service . && docker run -m512M --cpus 2 -it -p 3001:8080 --rm playlist-service
