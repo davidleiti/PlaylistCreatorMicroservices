@@ -1,20 +1,25 @@
 package com.ubb.david.playlistcreator.data
 
+import com.ubb.david.playlistcreator.domain.PlaylistDto
 import com.ubb.david.playlistcreator.domain.TrackDto
 import retrofit2.Response
-import retrofit2.http.DELETE
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface PlaylistApi {
-    @POST("/playlist")
-    suspend fun createNewPlaylist(): Response<List<TrackDto>>
+    @POST("/playlists")
+    suspend fun createNewPlaylist(): Response<PlaylistDto>
 
-    @PUT("/playlist/tracks")
-    suspend fun addTracksFromAlbum(@Query("albumId") albumId: String): Response<List<TrackDto>>
+    @GET("/playlists/{playlistId}/tracks")
+    suspend fun getPlaylistTracks(@Path("playlistId") playlistId: String): Response<List<TrackDto>>
 
-    @DELETE("/playlist/tracks/{id}")
-    suspend fun removeTrack(@Path("id") trackId: String): Response<Boolean>
+    @PUT("/playlists/{playlistId}/tracks")
+    suspend fun addTracksFromAlbum(
+        @Path("playlistId") playlistId: String,
+        @Query("albumId") albumId: String,
+        @Query("albumName") albumName: String,
+        @Query("thumbnailUrl") thumbnailUrl: String
+    ): Response<List<TrackDto>>
+
+    @DELETE("/playlists/{playlistId}/tracks/{trackId}")
+    suspend fun removeTrack(@Path("playlistId") playlistId: String, @Path("trackId") trackId: String): Response<Boolean>
 }

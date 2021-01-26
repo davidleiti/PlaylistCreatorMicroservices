@@ -5,7 +5,9 @@
     tools:context=".presentation.MainFragment">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.ubb.david.playlistcreator.presentation.MainViewModel" />
@@ -50,26 +52,38 @@
             app:layout_constraintTop_toTopOf="@id/welcome_label" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/new_playlist_button"
+            android:id="@+id/load_previous_playlist"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/lbl_create_playlist"
+            android:text="@string/lbl_load_prev"
+            android:visibility="@{viewModel.tracks == null ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/welcome_label" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/new_playlist_button"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_create_playlist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/load_previous_playlist"
+            app:layout_goneMarginTop="16dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tracks_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/new_playlist_button"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_goneMarginTop="16dp"
-            tools:listitem="@layout/track_item"/>
+            tools:listitem="@layout/track_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

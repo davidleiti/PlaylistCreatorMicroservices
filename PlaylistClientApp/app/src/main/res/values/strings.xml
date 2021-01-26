@@ -2,5 +2,6 @@
     <string name="app_name">PlaylistCreator</string>
     <string name="lbl_logout">Logout</string>
     <string name="lbl_welcome_user">Welcome %1$s!</string>
-    <string name="lbl_create_playlist">Create new playlist</string>
+    <string name="lbl_create_playlist">Create new</string>
+    <string name="lbl_load_prev">Load playlist</string>
 </resources>
