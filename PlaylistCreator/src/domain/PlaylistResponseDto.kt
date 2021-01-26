@@ -1,4 +1,3 @@
 package com.ubb.david.domain
 
-class PlaylistResponseDto {
-}
+data class PlaylistResponseDto(val playlistId: String)

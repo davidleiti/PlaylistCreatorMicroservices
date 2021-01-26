@@ -1,6 +1,7 @@
 package com.ubb.david.data
 
 import com.google.gson.Gson
+import com.ubb.david.domain.PlaylistDto
 import com.ubb.david.domain.TrackDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,13 +19,13 @@ class NetworkController {
     private val musicServiceApi: MusicServiceApi = createMusicServiceApi()
     private val playlistServiceApi: PlaylistServiceApi = createPlaylistServiceApi()
 
-    suspend fun createNewPlaylist(): Result<List<TrackDto>> {
+    suspend fun createNewPlaylist(): Result<PlaylistDto> {
         return when (val topTracksResult = performApiCall { musicServiceApi.getTopTracks() }) {
             is Result.Success -> {
-                when (val createPlaylistResult = performApiCall { playlistServiceApi.addTracksToPlaylist(topTracksResult.data) }) {
-                    is Result.Success -> Result.Success(topTracksResult.data)
+                when (val createPlaylistResult = performApiCall { playlistServiceApi.createPlaylist(topTracksResult.data) }) {
+                    is Result.Success -> Result.Success(PlaylistDto(playlistId = createPlaylistResult.data.playlistId, tracks = topTracksResult.data))
                     is Result.Error -> {
-                        println("Error retrieving saving top tracks, cause: ${createPlaylistResult.exception} - ${createPlaylistResult.errorMessage}")
+                        println("Error saving saving top tracks, cause: ${createPlaylistResult.exception} - ${createPlaylistResult.errorMessage}")
                         createPlaylistResult
                     }
                 }
@@ -36,10 +37,18 @@ class NetworkController {
         }
     }
 
-    suspend fun addAlbumTracksToPlaylist(albumId: String): Result<List<TrackDto>> {
+    suspend fun getPlaylistTracks(playlistId: String): Result<List<TrackDto>> = performApiCall { playlistServiceApi.getPlaylistTracks(playlistId) }
+
+    suspend fun addAlbumTracksToPlaylist(
+            playlistId: String,
+            albumId: String,
+            albumName: String,
+            thumbnailUrl: String,
+    ): Result<List<TrackDto>> {
         return when (val albumTracksResult = performApiCall { musicServiceApi.getAlbumTracks(albumId) }) {
             is Result.Success -> {
-                when (val addTracksToPlaylistResult = performApiCall { playlistServiceApi.addTracksToPlaylist(albumTracksResult.data) }) {
+                val enrichedData = albumTracksResult.data.map { track -> track.copy(albumId = albumId, albumName = albumName, thumbnailUrl = thumbnailUrl) }
+                when (val addTracksToPlaylistResult = performApiCall { playlistServiceApi.addTracksToPlaylist(playlistId, enrichedData) }) {
                     is Result.Success -> Result.Success(albumTracksResult.data)
                     is Result.Error -> addTracksToPlaylistResult
                 }
@@ -48,7 +57,8 @@ class NetworkController {
         }
     }
 
-    suspend fun removeTrackFromPlaylist(trackId: String): Result<Unit> = performApiCall { playlistServiceApi.removeTrackFromPlaylist(trackId) }
+    suspend fun removeTrackFromPlaylist(playlistId: String, trackId: String): Result<Unit> =
+            performApiCall { playlistServiceApi.removeTrackFromPlaylist(playlistId, trackId) }
 
     private suspend fun <T : Any> performApiCall(call: suspend () -> Response<T>): Result<T> = withContext(Dispatchers.IO) {
         try {

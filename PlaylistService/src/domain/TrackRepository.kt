@@ -1,14 +1,25 @@
 package com.ubb.david.domain
 
 import com.ubb.david.data.Track
+import java.util.*
 
 class TrackRepository {
 
-    private val _localTracks: MutableList<Track> = mutableListOf()
-    val localTracks: List<Track>
-        get() = _localTracks
+    private val _localTracks: MutableMap<String, MutableSet<Track>> = mutableMapOf()
 
-    fun addTracks(tracks: List<Track>): Boolean = _localTracks.addAll(tracks)
+    fun getTracks(playlistId: String): Set<Track>? = _localTracks[playlistId]
 
-    fun removeTrack(trackId: String): Boolean = _localTracks.removeIf { track -> track.id == trackId}
+    fun createPlaylist(tracks: List<Track>): String {
+        val playlistUuid = UUID.randomUUID().toString()
+        _localTracks[playlistUuid] = tracks.toMutableSet()
+        return playlistUuid
+    }
+
+    fun addTracks(playlistId: String, tracks: List<Track>): Boolean {
+        println("Adding the following data: $tracks")
+        return _localTracks[playlistId]?.addAll(tracks) ?: false
+    }
+
+    fun removeTrack(playlistId: String, trackId: String): Boolean =
+        _localTracks[playlistId]?.removeIf { track -> track.id == trackId } ?: false
 }

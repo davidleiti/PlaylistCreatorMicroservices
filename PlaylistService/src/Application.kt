@@ -21,6 +21,10 @@ fun Application.module() {
     install(DataConversion)
     install(ContentNegotiation) { gson { setPrettyPrinting() } }
     install(Locations)
+    install(CallLogging) {
+        level = Level.INFO
+        filter { call -> call.request.path().startsWith("/") }
+    }
 
     routing { playlist(TrackRepository()) }
 }

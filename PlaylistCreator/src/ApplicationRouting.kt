@@ -8,43 +8,52 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.delete
+import io.ktor.locations.get
+import io.ktor.locations.put
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.post
-import io.ktor.routing.put
-import io.ktor.routing.route
 
 @KtorExperimentalLocationsAPI
 fun Routing.playlistAppRouting(networkController: NetworkController) {
     authenticate("FirebaseAuthProvider") {
-        route("/playlist") {
-            post {
-                when (val result = networkController.createNewPlaylist()) {
+        post("/playlists") {
+            when (val result = networkController.createNewPlaylist()) {
+                is Result.Success -> call.respond(HttpStatusCode.OK, result.data)
+                is Result.Error -> call.respond(HttpStatusCode.InternalServerError, result.errorMessage.orEmpty())
+            }
+        }
+        get<PlaylistTracksPath> { path ->
+            when (val result = networkController.getPlaylistTracks(path.playlistId)) {
+                is Result.Success -> call.respond(HttpStatusCode.OK, result.data)
+                is Result.Error -> call.respond(HttpStatusCode.NotFound)
+            }
+        }
+        put<PlaylistTracksPath> { path ->
+            call.parameters["albumId"]?.let { albumId ->
+                val albumName = call.parameters["albumName"]
+                val thumbnailUrl = call.parameters["thumbnailUrl"]
+                when (val result = networkController.addAlbumTracksToPlaylist(path.playlistId, albumId, albumName.orEmpty(), thumbnailUrl.orEmpty())) {
                     is Result.Success -> call.respond(HttpStatusCode.OK, result.data)
                     is Result.Error -> call.respond(HttpStatusCode.InternalServerError, result.errorMessage.orEmpty())
                 }
+            } ?: run {
+                call.respond(HttpStatusCode.BadRequest)
             }
-            put("tracks") {
-                call.parameters["albumId"]?.let { albumId ->
-                    when (val result = networkController.addAlbumTracksToPlaylist(albumId)) {
-                        is Result.Success -> call.respond(HttpStatusCode.OK, result.data)
-                        is Result.Error -> call.respond(HttpStatusCode.InternalServerError, result.errorMessage.orEmpty())
-                    }
-                } ?: run {
-                    call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-            delete<TrackLocation> { trackLocation ->
-                val trackId = trackLocation.id
-                when (val result = networkController.removeTrackFromPlaylist(trackId)) {
-                    is Result.Success -> call.respond(HttpStatusCode.OK, true)
-                    is Result.Error -> call.respond(HttpStatusCode.InternalServerError, result.errorMessage.orEmpty())
-                }
+        }
+        delete<PlaylistTrackPath> { path ->
+            when (val result = networkController.removeTrackFromPlaylist(path.playlistId, path.trackId)) {
+                is Result.Success -> call.respond(HttpStatusCode.OK, true)
+                is Result.Error -> call.respond(HttpStatusCode.InternalServerError, result.errorMessage.orEmpty())
             }
         }
     }
 }
 
 @KtorExperimentalLocationsAPI
-@Location("/tracks/{id}")
-data class TrackLocation(val id: String)
+@Location("/playlists/{playlistId}/tracks")
+data class PlaylistTracksPath(val playlistId: String)
+
+@KtorExperimentalLocationsAPI
+@Location("/playlists/{playlistId}/tracks/{trackId}")
+data class PlaylistTrackPath(val playlistId: String, val trackId: String)
