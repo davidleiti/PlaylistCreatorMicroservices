@@ -28,6 +28,10 @@ All 3 backend services were implemented in Kotlin via the Ktor framework, which 
 
 ![System architecure](https://i.imgur.com/hX9eHwL.png)
 
+## SOA patterns used
+
+- Client-side UI composition: the UI is defined and generated on the client-side based on the domain-specific Data Transfer Objects received from the microservices
+
 ## Screenshots
 
 Authentication |  No playlist | Playlist loaded 
