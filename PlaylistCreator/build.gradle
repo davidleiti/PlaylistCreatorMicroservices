@@ -1,12 +1,10 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
     }
     
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
     }
 }
 
@@ -15,10 +13,7 @@ apply plugin: 'application'
 
 group 'com.ubb.david'
 version '0.0.1'
-mainClassName = "com.ubb.david.PlaylistApplication"
-
-apply plugin: "com.github.johnrengelman.shadow"
-
+mainClassName = "io.ktor.server.netty.EngineMain"
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
@@ -61,10 +56,4 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:7.1.0")
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
-}
-
-shadowJar {
-    baseName = 'playlist-app'
-    classifier = null
-    version = null
 }
