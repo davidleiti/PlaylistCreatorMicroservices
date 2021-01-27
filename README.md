@@ -6,7 +6,7 @@ Playlist creator is a microservices based application server that allows for use
 The project consists of the following applications:
 - PlaylistClientApp: A mobile Android application written in Kotlin used as the frondend of the project, allowing authenticated users to view the list and modify the list of tracks supplied by the backend components. The user authentication is done via Firebase Authentication, and all subsequent API communication is done via secured HTTPS calls providing the user's client service id token.
 
-- PlaylistCreator: This service is the entry point for the frontend and the only exposed component, essentially acting as a facade ƒor the application domain, connecting the subsequent microservices and encapsulating the authentication and business logic of the application.
+- PlaylistCreator: This service is the entry point for the frontend and the only exposed component, essentially acting as a facade for the application domain, connecting the subsequent microservices and encapsulating the authentication and business logic of the application.
 All the HTTPS endpoints exposed by this service are secured, expecting the aforementioned client service id token being supplied in each call's Authorization header and verifying it's validity via the **Firebase Admin SDK**.
     - POST /playlists: Gets the top music tracks from the **MusicService**, stores in the **PlaylistService**, and returns the list of tracks along the newly created UUID uniqely identifying the playlist.
     - GET /playlists/{id}/tracks: Gets the list of tracks from the playlist with the given ID from the **PlaylistService**
@@ -27,3 +27,9 @@ Exposed HTTP endpoints:
 All 3 backend services were implemented in Kotlin via the Ktor framework, which is a lightweight functional framework for developing efficient and flexible microservices and web applications.
 
 ![System architecure](https://i.imgur.com/hX9eHwL.png)
+
+## Screenshots
+
+Authentication |  No playlist | Playlist loaded 
+:-------------:|:----------------:|:----------------:
+![Imgur](https://i.imgur.com/Bxp9F6o.png)  |  ![Imgur](https://i.imgur.com/q4nB37s.png) | ![Imgur](https://i.imgur.com/f0KI4wY.png)
