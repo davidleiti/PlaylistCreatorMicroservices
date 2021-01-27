@@ -16,9 +16,14 @@ All the HTTPS endpoints exposed by this service are secured, expecting the afore
 - MusicService: Microservice concerned with the retrieval of the top music tracks from the public **Spotify API**. The service handles the retrieval of valid access tokens for the public Spotify API endpoints by providing a Base64 encoded token composed of the generated clientId and clientSecret. After retrieving valid access tokens, the service can handle HTTP requests on the following endpoints:     
     - GET /albums/{albumId}: Which analogously retrieves and returns the music tracks for a specific album identified by its *albumId*
     - GET /tracks/top-50: Which retrieves, maps the relevant data, then returns the top 50 music tracks from the Spotify API
+    
 - PlaylistService: Microservice providing a set of CRUD operations for storing and modifying the created user playlists. For simplicity, the service will only be maintaining an in-memory repository for the generated playlists.
 Exposed HTTP endpoints:
     - GET /playlists/{id}/tracks: Gets the music tracks from the playlist with the given *id*, or returns 404 error in case the playlist hasn't been created beforehand.
     - POST /playlists: Creates a new playlist by supplying in the request body a list of tracks and returns a UUID for the newly created playlist.
     - PUT /playlists/{id}/tracks: Adds a list of tracks to the playlist with the given *id*.
     - DELETE /playlists/{id}/tracks/{trackId}: Remove the track with the given *trackId* from the playlist with the given *id*.
+
+All 3 backend services were implemented in Kotlin via the Ktor framework, which is a lightweight functional framework for developing efficient and flexible microservices and web applications.
+
+![System architecure](https://i.imgur.com/hX9eHwL.png)
