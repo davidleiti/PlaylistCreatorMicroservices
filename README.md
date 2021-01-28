@@ -21,8 +21,11 @@ Exposed HTTP endpoints:
     - POST /playlists: Creates a new playlist by supplying in the request body a list of tracks and returns a UUID for the newly created playlist.
     - PUT /playlists/{id}/tracks: Adds a list of tracks to the playlist with the given *id*.
     - DELETE /playlists/{id}/tracks/{trackId}: Remove the track with the given *trackId* from the playlist with the given *id*.
-    
-![System architecure](https://i.imgur.com/hX9eHwL.png)
+   
+   
+<p align="center">
+  <img src="https://i.imgur.com/hX9eHwL.png">
+</p>
 
 ## Technologies & Services used
 
