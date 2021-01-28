@@ -1,6 +1,4 @@
-# Playlist-creator
-
-Playlist creator is a microservices based application server that allows for users to retrieve the current top tracks from a music provider and generate a playlist of tracks by performing CRUD operations on the said list of tracks.
+Microservices based application server that allows for users to retrieve the current top tracks from a music provider and generate a playlist of tracks by performing CRUD operations on the said list of tracks.
 
 ## Components / Layers
 The project consists of the following applications:
